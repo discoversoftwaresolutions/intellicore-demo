@@ -42,7 +42,41 @@ if st.button("Submit to Cortex"):
         "Initiate data link with northern outpost."
     ])
     st.success(f"🤖 Cortex Decision: {decision}")
+# --- Capture & Execute Last Decision ---
+if 'last_decision' not in st.session_state:
+    st.session_state['last_decision'] = None
 
+# When Cortex button is clicked:
+if st.button("Submit to Cortex"):
+    decision = choice([
+        "Deploy drone to Area B for surveillance.",
+        "Hold drone deployment, awaiting weather confirmation.",
+        "Initiate data link with northern outpost."
+    ])
+    st.session_state['last_decision'] = decision
+    st.success(f"🤖 Cortex Decision: {decision}")
+
+# If we have a decision, show an Execute button
+if st.session_state['last_decision']:
+    st.markdown("**Ready to execute:**")
+    exec_col1, exec_col2 = st.columns([1,3])
+    with exec_col1:
+        if st.button("Execute Decision"):
+            cmd = st.session_state['last_decision']
+            # Simple mapping: choose agent based on keywords
+            if "drone" in cmd.lower():
+                agent = "drone"
+            elif "humanoid" in cmd.lower():
+                agent = "humanoid"
+            else:
+                agent = "virtual"
+            # Simulate endpoint call
+            st.info(f"🚀 Executing on `{agent}`: {cmd}")
+            # In real demo you'd call:
+            # r = requests.post(f"https://your-api/agent/{agent}", json={"command": cmd})
+            # st.write(r.json())
+    with exec_col2:
+        st.write(f"> {st.session_state['last_decision']}")
 # --- Agent Actions ---
 st.subheader("🤖 Agent Command Center")
 col1, col2, col3 = st.columns(3)
