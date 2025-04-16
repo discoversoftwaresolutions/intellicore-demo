@@ -1,14 +1,13 @@
 import streamlit as st
 import threading
-import json
 import hashlib
 import time
 from random import choice
 
-# Must be the first Streamlit command
+# 1️⃣ Must be first
 st.set_page_config(page_title="IntelliCore AGI Demo", layout="wide")
 
-# --- Password Gate ---
+# 2️⃣ Password Gate
 def check_password():
     def encrypt(p): return hashlib.sha256(p.encode()).hexdigest()
     correct_hash = encrypt("Stakeholder2025")
@@ -16,14 +15,12 @@ def check_password():
     if encrypt(entered) != correct_hash:
         st.warning("🔒 Access denied")
         st.stop()
-
 check_password()
 
-# --- Branding & Onboarding ---
+# 3️⃣ Branding & Onboarding
 st.image("https://intellicore.ai/assets/logo_dark.png", width=180)
 st.title("🤖 IntelliCore AGI – Stakeholder Demo")
 st.caption("Cortex Decisions • Autonomous Agents • Self-Reflection • Live Telemetry")
-
 with st.expander("📘 What can I do here?"):
     st.markdown("""
     - Ask IntelliCore AGI natural language questions  
@@ -32,21 +29,14 @@ with st.expander("📘 What can I do here?"):
     - See how the system learns from its own decisions  
     """)
 
-# --- Mock Cortex Decision ---
-st.subheader("🧠 Ask IntelliCore AGI")
-text = st.text_input("Your question:", placeholder="Should we deploy the drone to Area B?")
-if st.button("Submit to Cortex"):
-    decision = choice([
-        "Deploy drone to Area B for surveillance.",
-        "Hold drone deployment, awaiting weather confirmation.",
-        "Initiate data link with northern outpost."
-    ])
-    st.success(f"🤖 Cortex Decision: {decision}")
-# --- Capture & Execute Last Decision ---
+# 4️⃣ Mock Cortex Decision + Execute Button
 if 'last_decision' not in st.session_state:
     st.session_state['last_decision'] = None
 
-# When Cortex button is clicked:
+st.subheader("🧠 Ask IntelliCore AGI")
+text = st.text_input("Your question:", placeholder="Should we deploy the drone to Area B?")
+
+# When clicked, generate and store a mock decision
 if st.button("Submit to Cortex"):
     decision = choice([
         "Deploy drone to Area B for surveillance.",
@@ -56,41 +46,38 @@ if st.button("Submit to Cortex"):
     st.session_state['last_decision'] = decision
     st.success(f"🤖 Cortex Decision: {decision}")
 
-# If we have a decision, show an Execute button
+# Show "Execute Decision" if we have one
 if st.session_state['last_decision']:
     st.markdown("**Ready to execute:**")
-    exec_col1, exec_col2 = st.columns([1,3])
-    with exec_col1:
+    col_exec, col_show = st.columns([1, 3])
+    with col_exec:
         if st.button("Execute Decision"):
             cmd = st.session_state['last_decision']
-            # Simple mapping: choose agent based on keywords
+            # Basic routing logic
             if "drone" in cmd.lower():
                 agent = "drone"
             elif "humanoid" in cmd.lower():
                 agent = "humanoid"
             else:
                 agent = "virtual"
-            # Simulate endpoint call
             st.info(f"🚀 Executing on `{agent}`: {cmd}")
-            # In real demo you'd call:
-            # r = requests.post(f"https://your-api/agent/{agent}", json={"command": cmd})
-            # st.write(r.json())
-    with exec_col2:
+    with col_show:
         st.write(f"> {st.session_state['last_decision']}")
-# --- Agent Actions ---
+
+# 5️⃣ Agent Actions (Quick Buttons)
 st.subheader("🤖 Agent Command Center")
-col1, col2, col3 = st.columns(3)
-with col1:
+c1, c2, c3 = st.columns(3)
+with c1:
     if st.button("Send Drone"):
         st.info("🛰 Drone deployed to Area B")
-with col2:
+with c2:
     if st.button("Activate Humanoid"):
         st.info("🧍 Humanoid assisting medical team")
-with col3:
+with c3:
     if st.button("Contact Virtual Agent"):
         st.success("💬 Virtual Agent says: 'All systems are operational.'")
 
-# --- Simulated Telemetry Stream ---
+# 6️⃣ Simulated Telemetry Stream
 st.subheader("📡 Live Telemetry Feed (Simulated)")
 telemetry_box = st.empty()
 if st.button("Start Telemetry"):
@@ -105,7 +92,7 @@ if st.button("Start Telemetry"):
             time.sleep(1.5)
     threading.Thread(target=fake_telemetry, daemon=True).start()
 
-# --- Self-Reflection Logs ---
+# 7️⃣ Self-Reflection Logs (Simulated)
 st.subheader("🔄 AGI Self-Reflection Logs (Simulated)")
 sample_logs = [
     {
@@ -129,3 +116,4 @@ for entry in sample_logs:
         - ✅ **Ethics Approved:** {entry['ethics_approved']}  
         - 📘 **Why:** {entry['rationale']}  
         """)
+
