@@ -52,15 +52,14 @@ if st.session_state['last_decision']:
     col_exec, col_show = st.columns([1, 3])
     with col_exec:
         if st.button("Execute Decision"):
-            cmd = st.session_state['last_decision']
-            # Basic routing logic
-            if "drone" in cmd.lower():
-                agent = "drone"
-            elif "humanoid" in cmd.lower():
-                agent = "humanoid"
-            else:
-                agent = "virtual"
-            st.info(f"🚀 Executing on `{agent}`: {cmd}")
+    cmd = st.session_state['last_decision']
+    if "drone" in cmd.lower():
+        agent = "drone"
+    elif "humanoid" in cmd.lower():
+        agent = "humanoid"
+    else:
+        agent = "virtual"
+    st.info(f"🚀 Executing on `{agent}`: {cmd}")
     with col_show:
         st.write(f"> {st.session_state['last_decision']}")
 
