@@ -5,6 +5,9 @@ import hashlib
 import time
 from random import choice
 
+# Must be the first Streamlit command
+st.set_page_config(page_title="IntelliCore AGI Demo", layout="wide")
+
 # --- Password Gate ---
 def check_password():
     def encrypt(p): return hashlib.sha256(p.encode()).hexdigest()
@@ -16,18 +19,17 @@ def check_password():
 
 check_password()
 
-# --- Branding ---
-st.set_page_config(page_title="IntelliCore AGI Demo", layout="wide")
+# --- Branding & Onboarding ---
 st.image("https://intellicore.ai/assets/logo_dark.png", width=180)
 st.title("🤖 IntelliCore AGI – Stakeholder Demo")
 st.caption("Cortex Decisions • Autonomous Agents • Self-Reflection • Live Telemetry")
 
 with st.expander("📘 What can I do here?"):
     st.markdown("""
-    - Ask IntelliCore AGI natural language questions
-    - Trigger autonomous agents with one click
-    - Watch real-time telemetry from the field
-    - See how the system learns from its own decisions
+    - Ask IntelliCore AGI natural language questions  
+    - Trigger autonomous agents with one click  
+    - Watch real-time telemetry from the field  
+    - See how the system learns from its own decisions  
     """)
 
 # --- Mock Cortex Decision ---
@@ -54,7 +56,7 @@ with col3:
     if st.button("Contact Virtual Agent"):
         st.success("💬 Virtual Agent says: 'All systems are operational.'")
 
-# --- Simulated WebSocket ---
+# --- Simulated Telemetry Stream ---
 st.subheader("📡 Live Telemetry Feed (Simulated)")
 telemetry_box = st.empty()
 if st.button("Start Telemetry"):
@@ -67,9 +69,9 @@ if st.button("Start Telemetry"):
         for _ in range(6):
             telemetry_box.json(choice(updates))
             time.sleep(1.5)
-    threading.Thread(target=fake_telemetry).start()
+    threading.Thread(target=fake_telemetry, daemon=True).start()
 
-# --- Reflection Logs ---
+# --- Self-Reflection Logs ---
 st.subheader("🔄 AGI Self-Reflection Logs (Simulated)")
 sample_logs = [
     {
