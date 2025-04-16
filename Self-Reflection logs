@@ -1,0 +1,15 @@
+st.subheader("🔄 Self-Reflection Timeline (Ethics-Aware)")
+
+try:
+    logs = requests.get("https://api.intellicore.ai/self-reflection/latest").json()
+    for entry in logs[-5:][::-1]:
+        with st.container():
+            st.markdown(f"""
+            **🕒 {entry['timestamp']}**  
+            - **Suggestion:** *{entry['suggestion']}*  
+            - ✅ **Ethics Approved:** {entry['ethics_approved']}  
+            - 📘 **Why:** {entry['rationale']}  
+            - 🧠 **Context:** `{entry['context'][:120]}...`
+            """)
+except:
+    st.warning("Reflection logs are currently unavailable.")
