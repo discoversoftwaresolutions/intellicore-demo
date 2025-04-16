@@ -51,7 +51,7 @@ if st.session_state['last_decision']:
     st.markdown("**Ready to execute:**")
     col_exec, col_show = st.columns([1, 3])
     with col_exec:
-        if st.button("Execute Decision"):
+  if st.button("Execute Decision"):
     cmd = st.session_state['last_decision']
     if "drone" in cmd.lower():
         agent = "drone"
@@ -59,7 +59,16 @@ if st.session_state['last_decision']:
         agent = "humanoid"
     else:
         agent = "virtual"
-    st.info(f"🚀 Executing on `{agent}`: {cmd}")
+    try:
+        r = requests.post(
+            f"https://your‑api.example.com/agent/{agent}",
+            json={"command": cmd}
+        )
+        r.raise_for_status()
+        data = r.json()
+        st.success(f"✅ {agent.capitalize()} Agent Response: {data.get('executed', data)}")
+    except Exception as e:
+        st.error(f"Failed to execute: {e}")
     with col_show:
         st.write(f"> {st.session_state['last_decision']}")
 
