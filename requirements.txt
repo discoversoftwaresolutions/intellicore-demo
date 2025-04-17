@@ -5,13 +5,13 @@ websocket-client>=1.6
 
 # Audio & speech‑to‑text
 SpeechRecognition>=3.8
-PyAudio>=0.2
+sounddevice>=0.4.7      # replaces PyAudio
 
 # NLP & transformers
 transformers>=4.35
 torch>=2.0
 
-# Data processing & drift detection (SciPy KS test)
+# Data processing & drift detection
 numpy>=1.24
 scipy>=1.10
 
@@ -20,4 +20,3 @@ boto3>=1.29
 
 # Blockchain audit (optional)
 web3>=6.2
-streamlit run demo_dashboard.py
