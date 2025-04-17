@@ -3,7 +3,7 @@ streamlit>=1.24
 requests>=2.31
 websocket-client>=1.6
 
-# Audio & speech‐to‐text
+# Audio & speech‑to‑text
 SpeechRecognition>=3.8
 PyAudio>=0.2
 
@@ -11,13 +11,12 @@ PyAudio>=0.2
 transformers>=4.35
 torch>=2.0
 
-# Data processing & drift detection
+# Data processing & drift detection (SciPy KS test)
 numpy>=1.24
-alibi-detect>=1.9
+scipy>=1.10
 
 # AWS integrations (if used)
 boto3>=1.29
 
 # Blockchain audit (optional)
 web3>=6.2
-
