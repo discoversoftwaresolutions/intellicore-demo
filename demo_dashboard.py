@@ -160,3 +160,4 @@ with tabs[6]:
         stat, pvalue = ks_2samp(ref, new)
         st.write("Drift detected:", pvalue < 0.05)
         st.write("p-value:", round(pvalue, 4))
+intellicore-demo/demo_dashboard.py
