@@ -5,10 +5,15 @@ import time
 import requests
 from random import choice
 
-# 1️⃣ Must be first
+# ─── CONFIGURE THIS ────────────────────────────────────────────────────────────
+API_URL = "http://localhost:8000"  
+# e.g. "https://demo.intellicore.ai" or your deployed FastAPI host
+# ────────────────────────────────────────────────────────────────────────────────
+
+# 1️⃣ PAGE SETUP
 st.set_page_config(page_title="IntelliCore AGI Demo", layout="wide")
 
-# 2️⃣ Password Gate
+# 2️⃣ PASSWORD GATE
 def check_password():
     def encrypt(p): 
         return hashlib.sha256(p.encode()).hexdigest()
@@ -17,10 +22,9 @@ def check_password():
     if encrypt(entered) != correct_hash:
         st.warning("🔒 Access denied")
         st.stop()
-
 check_password()
 
-# 3️⃣ Branding & Onboarding
+# 3️⃣ BRANDING & ONBOARDING
 st.image("https://intellicore.ai/assets/logo_dark.png", width=180)
 st.title("🤖 IntelliCore AGI – Stakeholder Demo")
 st.caption("Cortex Decisions • Autonomous Agents • Self-Reflection • Live Telemetry")
@@ -32,14 +36,12 @@ with st.expander("📘 What can I do here?"):
     - See how the system learns from its own decisions  
     """)
 
-# 4️⃣ Mock Cortex Decision + Execute Button
+# 4️⃣ MOCK CORTEX → STORE DECISION
 if 'last_decision' not in st.session_state:
     st.session_state['last_decision'] = None
 
 st.subheader("🧠 Ask IntelliCore AGI")
 text = st.text_input("Your question:", placeholder="Should we deploy the drone to Area B?")
-
-# Generate a mock decision
 if st.button("Submit to Cortex"):
     decision = choice([
         "Deploy drone to Area B for surveillance.",
@@ -49,35 +51,44 @@ if st.button("Submit to Cortex"):
     st.session_state['last_decision'] = decision
     st.success(f"🤖 Cortex Decision: {decision}")
 
-# If we have a decision, allow execution
+# 5️⃣ EXECUTE DECISION WITH FALLBACK
 if st.session_state['last_decision']:
     st.markdown("**Ready to execute:**")
     exec_col, show_col = st.columns([1, 3])
     with exec_col:
         if st.button("Execute Decision"):
             cmd = st.session_state['last_decision']
-            # Map to agent
+            # determine agent
             if "drone" in cmd.lower():
                 agent = "drone"
             elif "humanoid" in cmd.lower():
                 agent = "humanoid"
             else:
                 agent = "virtual"
+
+            # attempt real API call
             try:
                 resp = requests.post(
-                    f"https://your-api.example.com/agent/{agent}",
+                    f"{API_URL}/agent/{agent}",
                     json={"command": cmd},
                     timeout=5
                 )
                 resp.raise_for_status()
                 data = resp.json()
                 st.success(f"✅ {agent.capitalize()} Agent Response: {data.get('executed', data)}")
-            except Exception as e:
-                st.error(f"Failed to execute on {agent}: {e}")
+            except Exception:
+                # fallback to mock
+                mock_resp = {
+                    "drone": "🛰 Mock: Drone would now execute that command.",
+                    "humanoid": "🧍 Mock: Humanoid would now execute that command.",
+                    "virtual": "💬 Mock: Virtual agent would now respond with simulated output."
+                }
+                st.info(mock_resp.get(agent))
+
     with show_col:
         st.write(f"> {st.session_state['last_decision']}")
 
-# 5️⃣ Quick Agent Buttons
+# 6️⃣ QUICK AGENT BUTTONS
 st.subheader("🤖 Quick Agent Commands")
 c1, c2, c3 = st.columns(3)
 with c1:
@@ -90,7 +101,7 @@ with c3:
     if st.button("Contact Virtual Agent"):
         st.success("💬 Virtual Agent says: 'All systems are operational.'")
 
-# 6️⃣ Simulated Telemetry Stream
+# 7️⃣ SIMULATED TELEMETRY
 st.subheader("📡 Live Telemetry Feed (Simulated)")
 telemetry_box = st.empty()
 if st.button("Start Telemetry"):
@@ -105,7 +116,7 @@ if st.button("Start Telemetry"):
             time.sleep(1.5)
     threading.Thread(target=fake_telemetry, daemon=True).start()
 
-# 7️⃣ Self-Reflection Logs (Simulated)
+# 8️⃣ REFLECTION LOGS (SIMULATED)
 st.subheader("🔄 AGI Self-Reflection Logs (Simulated)")
 sample_logs = [
     {
