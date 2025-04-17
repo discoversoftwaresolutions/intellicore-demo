@@ -6,3 +6,13 @@ numpy>=1.24
 scipy>=1.10
 transformers>=4.35
 torch>=2.0
+[server]
+headless = true
+enableCORS = false
+
+[theme]
+primaryColor = "#146ef5"
+backgroundColor = "#f9fafc"
+secondaryBackgroundColor = "#eaeef5"
+textColor = "#1f2c3f"
+font = "sans serif"
