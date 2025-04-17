@@ -47,3 +47,4 @@ echo
 echo "🎉 Environment setup complete!"
 echo "   • Activate it with:  source ./${ENV_DIR}/bin/activate"
 echo "   • Deactivate with:     deactivate"
+your-project/setup_env.sh
