@@ -24,3 +24,39 @@ numpy==1.23.5
 alibi-detect==0.12.0
 streamlit==1.24.1
 pandas==2.0.1
+# requirements.txt
+
+# Core numeric stack
+numpy==1.23.5
+pandas==2.0.3
+scikit-learn==1.2.2
+
+# Web UI
+streamlit==1.24.1
+
+# Anomaly detection
+alibi-detect==0.12.0
+# requirements.txt
+
+# Core numeric stack
+numpy==1.23.5
+pandas==2.0.3
+scikit-learn==1.2.2
+
+# Web UI
+streamlit==1.24.1
+
+# Anomaly detection
+alibi-detect==0.12.0
+# requirements.txt
+
+# Core numeric stack
+numpy==1.23.5
+pandas==2.0.3
+scikit-learn==1.2.2
+
+# Web UI
+streamlit==1.24.1
+
+# Anomaly detection
+alibi-detect==0.12.0
