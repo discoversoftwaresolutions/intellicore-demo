@@ -1,0 +1,13 @@
+# ⚠️ Only run this if you're okay starting clean
+rm -rf venv __pycache__ .streamlit
+
+# 1. Rebuild environment
+python3.10 -m venv venv
+source venv/bin/activate
+pip install --upgrade pip setuptools wheel
+
+# 2. Install updated requirements
+pip install -r requirements.txt
+
+# 3. Run your app
+streamlit run demo_dashboard.py
