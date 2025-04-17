@@ -1,62 +1,15 @@
-# Core demo dependencies
-streamlit>=1.24
-requests>=2.31
-websocket-client>=1.6
-
-# Audio & speech‑to‑text
-SpeechRecognition>=3.8
-sounddevice>=0.4.7      # replaces PyAudio
-
-# NLP & transformers
-transformers>=4.35
-torch>=2.0
-
-# Data processing & drift detection
-numpy>=1.24
-scipy>=1.10
-
-# AWS integrations (if used)
-boto3>=1.29
-
-# Blockchain audit (optional)
-web3>=6.2
-numpy==1.23.5
-alibi-detect==0.12.0
-streamlit==1.24.1
-pandas==2.0.1
-# requirements.txt
-
-# Core numeric stack
-numpy==1.23.5
-pandas==2.0.3
-scikit-learn==1.2.2
-
-# Web UI
-streamlit==1.24.1
-
-# Anomaly detection
 alibi-detect==0.12.0
 # requirements.txt
 
-# Core numeric stack
+# numeric & data
 numpy==1.23.5
 pandas==2.0.3
-scikit-learn==1.2.2
 
-# Web UI
+# UI
 streamlit==1.24.1
 
-# Anomaly detection
+# anomaly detection
 alibi-detect==0.12.0
-# requirements.txt
 
-# Core numeric stack
-numpy==1.23.5
-pandas==2.0.3
-scikit-learn==1.2.2
-
-# Web UI
-streamlit==1.24.1
-
-# Anomaly detection
-alibi-detect==0.12.0
+# audio demo support (optional)
+pyaudio==0.2.14
