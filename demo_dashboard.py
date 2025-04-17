@@ -4,22 +4,24 @@ import hashlib
 import time
 import requests
 import numpy as np
-import sounddevice as sd
-import speech_recognition as sr
 from random import choice
 from scipy.stats import ks_2samp
 from transformers import pipeline
 
+# ─── AUDIO IMPORT (guarded) ─────────────────────────────────────────────────
+try:
+    import sounddevice as sd
+    import speech_recognition as sr
+    has_audio = True
+except Exception:
+    has_audio = False
+
 # ─── CONFIG ────────────────────────────────────────────────────────────────
-API_URL = "https://demo.intellicore.ai"  # Replace with your API endpoint
+API_URL = "https://demo.intellicore.ai"  # your API endpoint
 PASSWORD = "Stakeholder2025"
 
 # ─── PAGE SETUP ────────────────────────────────────────────────────────────
-st.set_page_config(
-    page_title="IntelliCore AGI Demo",
-    layout="wide",
-    initial_sidebar_state="collapsed"
-)
+st.set_page_config(page_title="IntelliCore AGI Demo", layout="wide")
 
 # ─── PASSWORD GATE ─────────────────────────────────────────────────────────
 def check_password():
@@ -63,9 +65,11 @@ with tabs[0]:
         with exec_col:
             if st.button("Execute Decision"):
                 cmd = st.session_state['last_decision']
-                agent = ("drone" if "drone" in cmd.lower()
-                         else "humanoid" if "humanoid" in cmd.lower()
-                         else "virtual")
+                agent = (
+                    "drone" if "drone" in cmd.lower()
+                    else "humanoid" if "humanoid" in cmd.lower()
+                    else "virtual"
+                )
                 try:
                     resp = requests.post(
                         f"{API_URL}/agent/{agent}",
@@ -127,17 +131,20 @@ with tabs[3]:
 # ─── SPEECH TAB ────────────────────────────────────────────────────────────
 with tabs[4]:
     st.header("Speech-to-Text")
-    if st.button("Record & Transcribe"):
-        recognizer = sr.Recognizer()
-        with sd.InputStream(samplerate=16000, channels=1) as stream:
-            st.info("Recording...")
-            audio = stream.read(16000 * 5)[0]
-        audio_data = sr.AudioData(np.array(audio).tobytes(), 16000, 2)
-        try:
-            text = recognizer.recognize_google(audio_data)
-            st.success(f"🔊 {text}")
-        except Exception as e:
-            st.error(f"Transcription error: {e}")
+    if not has_audio:
+        st.warning("🔇 Audio unavailable in this environment.")
+    else:
+        if st.button("Record & Transcribe"):
+            recognizer = sr.Recognizer()
+            with sd.InputStream(samplerate=16000, channels=1) as stream:
+                st.info("Recording...")
+                audio = stream.read(16000 * 5)[0]
+            audio_data = sr.AudioData(np.array(audio).tobytes(), 16000, 2)
+            try:
+                text = recognizer.recognize_google(audio_data)
+                st.success(f"🔊 {text}")
+            except Exception as e:
+                st.error(f"Transcription error: {e}")
 
 # ─── EMOTION TAB ───────────────────────────────────────────────────────────
 with tabs[5]:
@@ -160,4 +167,3 @@ with tabs[6]:
         stat, pvalue = ks_2samp(ref, new)
         st.write("Drift detected:", pvalue < 0.05)
         st.write("p-value:", round(pvalue, 4))
-intellicore-demo/demo_dashboard.py
