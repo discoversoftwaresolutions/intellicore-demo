@@ -103,19 +103,22 @@ with tabs[1]:
 
 # ─── TELEMETRY TAB ───────────────────────────────────────────────────────────
 with tabs[2]:
-    st.header("Live Telemetry Feed")
+    st.markdown("### 📡 Live Agent Telemetry")
     telemetry_box = st.empty()
-    if st.button("Start Telemetry Stream"):
+
+    if st.button("📶 Start Feed"):
         def stream():
             updates = [
-                {"agent": "drone", "status": "Scanning", "location": "Area B"},
-                {"agent": "humanoid", "status": "Assisting", "location": "Zone C"},
-                {"agent": "virtual", "status": "Reporting", "location": "Command"}
+                {"agent": "drone", "status": "Scanning", "zone": "Sector A"},
+                {"agent": "humanoid", "status": "Assisting", "zone": "Zone B"},
+                {"agent": "virtual", "status": "Reporting", "zone": "HQ"}
             ]
             for _ in range(10):
                 telemetry_box.json(choice(updates))
                 time.sleep(1)
-        threading.Thread(target=stream, daemon=True).start()
+
+        thread = threading.Thread(target=stream)
+        thread.start()
 
 # ─── REFLECTION TAB ─────────────────────────────────────────────────────────
 with tabs[3]:
