@@ -177,3 +177,36 @@ for entry in sample_logs:
         - ✅ **Ethics Approved:** {entry['ethics_approved']}  
         - 📘 **Why:** {entry['rationale']}  
         """)
+import io
+import numpy as np
+from perception.audio.speech_recognition import SpeechRecognizer
+from perception.audio.emotion_recognition import EmotionRecognizer
+from mlops.drift_detector import DriftDetector
+
+# … (previous imports & setup)
+
+# ─── AUDIO INPUT PANEL ──────────────────────────────────────────────────────
+with st.sidebar.expander("🎤 Speech-to-Text"):
+    if st.button("Record & Transcribe"):
+        sr = SpeechRecognizer()
+        txt = sr.transcribe(duration=5)
+        st.write("🔊 Transcribed:", txt)
+
+# ─── EMOTION ANALYSIS PANEL ─────────────────────────────────────────────────
+with st.sidebar.expander("😊 Emotion Analysis"):
+    user_text = st.text_area("Enter text to analyze emotion")
+    if st.button("Analyze Emotion"):
+        er = EmotionRecognizer()
+        result = er.detect(user_text)
+        st.json(result)
+
+# ─── DRIFT CHECK PANEL ──────────────────────────────────────────────────────
+with st.sidebar.expander("⚠️ Data Drift Detector"):
+    if st.button("Check Drift"):
+        # generate dummy data for demo
+        ref = np.random.normal(size=500)
+        new = np.concatenate([ref, np.random.normal(loc=1.5, size=100)])
+        dd = DriftDetector(reference_data=ref)
+        drift, p = dd.run(new)
+        st.write("Drift detected:", drift)
+        st.write("p-value:", round(p,3))
