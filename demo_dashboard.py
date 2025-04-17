@@ -2,6 +2,7 @@ import streamlit as st
 import threading
 import hashlib
 import time
+import requests
 from random import choice
 
 # 1️⃣ Must be first
@@ -9,12 +10,14 @@ st.set_page_config(page_title="IntelliCore AGI Demo", layout="wide")
 
 # 2️⃣ Password Gate
 def check_password():
-    def encrypt(p): return hashlib.sha256(p.encode()).hexdigest()
+    def encrypt(p): 
+        return hashlib.sha256(p.encode()).hexdigest()
     correct_hash = encrypt("Stakeholder2025")
     entered = st.text_input("Enter demo password:", type="password")
     if encrypt(entered) != correct_hash:
         st.warning("🔒 Access denied")
         st.stop()
+
 check_password()
 
 # 3️⃣ Branding & Onboarding
@@ -36,7 +39,7 @@ if 'last_decision' not in st.session_state:
 st.subheader("🧠 Ask IntelliCore AGI")
 text = st.text_input("Your question:", placeholder="Should we deploy the drone to Area B?")
 
-# When clicked, generate and store a mock decision
+# Generate a mock decision
 if st.button("Submit to Cortex"):
     decision = choice([
         "Deploy drone to Area B for surveillance.",
@@ -46,34 +49,36 @@ if st.button("Submit to Cortex"):
     st.session_state['last_decision'] = decision
     st.success(f"🤖 Cortex Decision: {decision}")
 
-# Show "Execute Decision" if we have one
+# If we have a decision, allow execution
 if st.session_state['last_decision']:
     st.markdown("**Ready to execute:**")
-    col_exec, col_show = st.columns([1, 3])
-    with col_exec:
-  if st.button("Execute Decision"):
-    cmd = st.session_state['last_decision']
-    if "drone" in cmd.lower():
-        agent = "drone"
-    elif "humanoid" in cmd.lower():
-        agent = "humanoid"
-    else:
-        agent = "virtual"
-    try:
-        r = requests.post(
-            f"https://your‑api.example.com/agent/{agent}",
-            json={"command": cmd}
-        )
-        r.raise_for_status()
-        data = r.json()
-        st.success(f"✅ {agent.capitalize()} Agent Response: {data.get('executed', data)}")
-    except Exception as e:
-        st.error(f"Failed to execute: {e}")
-    with col_show:
+    exec_col, show_col = st.columns([1, 3])
+    with exec_col:
+        if st.button("Execute Decision"):
+            cmd = st.session_state['last_decision']
+            # Map to agent
+            if "drone" in cmd.lower():
+                agent = "drone"
+            elif "humanoid" in cmd.lower():
+                agent = "humanoid"
+            else:
+                agent = "virtual"
+            try:
+                resp = requests.post(
+                    f"https://your-api.example.com/agent/{agent}",
+                    json={"command": cmd},
+                    timeout=5
+                )
+                resp.raise_for_status()
+                data = resp.json()
+                st.success(f"✅ {agent.capitalize()} Agent Response: {data.get('executed', data)}")
+            except Exception as e:
+                st.error(f"Failed to execute on {agent}: {e}")
+    with show_col:
         st.write(f"> {st.session_state['last_decision']}")
 
-# 5️⃣ Agent Actions (Quick Buttons)
-st.subheader("🤖 Agent Command Center")
+# 5️⃣ Quick Agent Buttons
+st.subheader("🤖 Quick Agent Commands")
 c1, c2, c3 = st.columns(3)
 with c1:
     if st.button("Send Drone"):
@@ -124,4 +129,3 @@ for entry in sample_logs:
         - ✅ **Ethics Approved:** {entry['ethics_approved']}  
         - 📘 **Why:** {entry['rationale']}  
         """)
-
