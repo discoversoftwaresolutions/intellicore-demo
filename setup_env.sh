@@ -48,3 +48,17 @@ echo "🎉 Environment setup complete!"
 echo "   • Activate it with:  source ./${ENV_DIR}/bin/activate"
 echo "   • Deactivate with:     deactivate"
 your-project/setup_env.sh
+#!/usr/bin/env bash
+set -euo pipefail
+
+# — Install system deps for PyAudio (PortAudio headers)
+sudo apt update
+sudo apt install -y portaudio19-dev python3-dev build-essential
+
+# … rest of your venv & pip setup follows …
+sudo apt update
+sudo apt install -y portaudio19-dev python3-dev build-essential
+sudo dnf install -y portaudio-devel python3-devel gcc
+sudo dnf install -y portaudio-devel python3-devel gcc
+sudo apk add portaudio-dev python3-dev gcc musl-dev
+brew install portaudio
