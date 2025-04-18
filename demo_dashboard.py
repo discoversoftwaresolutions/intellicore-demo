@@ -1,4 +1,44 @@
-import streamlit as st
+import streamlit as stimport streamlit as st
+import hashlib
+import numpy as np
+import time
+import threading
+import requests
+import json
+from random import choice
+from transformers import pipeline
+from scipy.stats import ks_2samp
+
+try:
+    import sounddevice as sd
+    import speech_recognition as sr
+    has_audio = True
+except Exception:
+    has_audio = False
+
+try:
+    import websocket
+    has_ws = True
+except ImportError:
+    has_ws = False
+
+st.set_page_config(page_title="IntelliCore AGI", layout="wide")
+PASSWORD = "Stakeholder2025"
+
+def check_password():
+    def encrypt(p): return hashlib.sha256(p.encode()).hexdigest()
+    input_pass = st.sidebar.text_input("🔐 Enter Password:", type="password")
+    if encrypt(input_pass) != encrypt(PASSWORD):
+        st.warning("🔒 Access denied")
+        st.stop()
+
+check_password()
+st.sidebar.success("✅ Access Granted")
+
+# 🧠 Title and demo video
+st.title("🤖 IntelliCore AGI — Unified Cognitive Control System")
+st.video("intellicore_demo_walkthrough.mp4")
+st.markdown("Explore IntelliCore’s full AGI stack: voice, reasoning, agents, telemetry, and more.")
 import hashlib
 import numpy as np
 import time
