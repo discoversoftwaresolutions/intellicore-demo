@@ -47,7 +47,7 @@ tabs = st.tabs([
     "🔄 Reflection", "🎤 Voice", "😊 Emotion", "⚠️ Drift"
 ])
 
-# 🌐 Ask IntelliCore (Cortex)
+# 🌐 Ask IntelliCore
 with tabs[0]:
     st.markdown("### 🧠 Ask IntelliCore Cortex")
     question = st.text_input("What would you like to ask the system?")
@@ -74,7 +74,7 @@ with tabs[1]:
     if c3.button("Contact Virtual Agent"):
         st.success("💬 Virtual agent engaging...")
 
-# 📡 Telemetry (WebSocket or mock)
+# 📡 Telemetry
 with tabs[2]:
     st.markdown("### 📡 Live Agent Telemetry")
     telemetry_box = st.empty()
@@ -101,7 +101,7 @@ with tabs[2]:
     if st.button("▶️ Use Simulated Telemetry"):
         threading.Thread(target=mock_stream).start()
 
-# 🔄 Self-Reflection
+# 🔄 Reflection
 with tabs[3]:
     st.markdown("### 🔄 Self-Reflection Logs")
     logs = [
@@ -109,10 +109,9 @@ with tabs[3]:
         {"timestamp": "2025-04-14T09:22Z", "change": "Switched from GPS to vision nav", "why": "Improved accuracy"}
     ]
     for log in logs:
-        st.markdown(f"**🕒 {log['timestamp']}** — *{log['change']}*  
-> _Reason:_ {log['why']}")
+        st.markdown(f"**🕒 {log['timestamp']}** — *{log['change']}*  \n> _Reason:_ {log['why']}")
 
-# 🎤 Voice to Cortex
+# 🎤 Voice Input
 with tabs[4]:
     st.markdown("### 🎤 Voice Input")
     if not has_audio:
@@ -136,7 +135,7 @@ with tabs[4]:
             except Exception as e:
                 st.error(f"Speech recognition error: {e}")
 
-# 😊 Emotion NLP
+# 😊 Emotion Analysis
 with tabs[5]:
     st.markdown("### 😊 Emotion Analysis")
     text = st.text_area("Input text for emotional analysis:")
