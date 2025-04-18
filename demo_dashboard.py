@@ -36,7 +36,6 @@ check_password()
 st.sidebar.success("✅ Access Granted")
 
 st.title("🤖 IntelliCore AGI — Unified Cognitive Control System")
-st.video("intellicore_demo_walkthrough.mp4")
 st.markdown("Explore IntelliCore’s full AGI stack: voice, reasoning, agents, telemetry, and more.")
 
 if 'last_decision' not in st.session_state:
