@@ -9,7 +9,6 @@ from random import choice
 from transformers import pipeline
 from scipy.stats import ks_2samp
 
-# Voice and audio imports
 try:
     import sounddevice as sd
     import speech_recognition as sr
@@ -17,7 +16,6 @@ try:
 except Exception:
     has_audio = False
 
-# WebSocket support (optional)
 try:
     import websocket
     has_ws = True
@@ -37,52 +35,48 @@ def check_password():
 check_password()
 st.sidebar.success("✅ Access Granted")
 
-# Branding and walkthrough
-st.title("🤖 IntelliCore AGI — Jarvis Demo")
-st.image(
-    "https://intellicore.ai/assets/demo_walkthrough.png",
-    caption="🚀 IntelliCore AGI Walkthrough",
-    use_column_width=True
-)
-st.markdown("Live telemetry, voice input, and Cortex response simulation.")
+st.title("🤖 IntelliCore AGI — Unified Cognitive Control System")
+st.video("https://intellicore.ai/assets/demo_walkthrough.mp4")
+st.markdown("Explore IntelliCore’s full AGI stack: voice, reasoning, agents, telemetry, and more.")
 
-# Session state
 if 'last_decision' not in st.session_state:
     st.session_state['last_decision'] = None
 
-# Define tabs
 tabs = st.tabs([
-    "🎤 Voice-to-Cortex", "📡 Live Telemetry",
-    "🔄 Reflection", "😊 Emotion", "⚠️ Drift"
+    "🌐 Ask IntelliCore", "🛰 Agents", "📡 Telemetry",
+    "🔄 Reflection", "🎤 Voice", "😊 Emotion", "⚠️ Drift"
 ])
 
-# 🎤 Voice Input Tab
+# 🌐 Ask IntelliCore (Cortex)
 with tabs[0]:
-    st.markdown("### 🎙️ Talk to IntelliCore")
-    if not has_audio:
-        st.warning("🔇 Voice not supported in this environment.")
-    else:
-        if st.button("🎧 Start Listening"):
-            recognizer = sr.Recognizer()
-            mic = sr.Microphone()
-            with mic as source:
-                st.info("🎤 Listening for 5 seconds...")
-                audio = recognizer.listen(source, timeout=5)
-            try:
-                result = recognizer.recognize_google(audio)
-                st.success(f"🗣 You said: {result}")
-                response = choice([
-                    "Acknowledged. Initiating scan of Sector 3.",
-                    "Holding position. Awaiting further input.",
-                    "Deploying agent to coordinate entry protocol."
-                ])
-                st.info(f"🤖 Cortex: {response}")
-            except Exception as e:
-                st.error(f"Speech recognition error: {e}")
+    st.markdown("### 🧠 Ask IntelliCore Cortex")
+    question = st.text_input("What would you like to ask the system?")
+    if st.button("🧠 Generate Response"):
+        st.session_state['last_decision'] = choice([
+            "Initiating strategic scan of Zone C.",
+            "All systems are currently optimal.",
+            "Power conservation enabled across northern agents."
+        ])
+        st.success("Cortex has responded.")
+    if st.session_state['last_decision']:
+        st.info(f"🤖 Cortex: {st.session_state['last_decision']}")
+        if st.button("🚀 Execute Decision"):
+            st.success("🛰 Decision Executed.")
 
-# 📡 Live Telemetry Tab
+# 🛰 Agent Command Center
 with tabs[1]:
-    st.markdown("### 📡 Live Agent Telemetry (WebSocket or Mock)")
+    st.markdown("### 🛰 Agent Operations")
+    c1, c2, c3 = st.columns(3)
+    if c1.button("Deploy Drone"):
+        st.info("🛸 Drone deployed to Sector A.")
+    if c2.button("Activate Humanoid"):
+        st.info("🤖 Humanoid operational in MedBay.")
+    if c3.button("Contact Virtual Agent"):
+        st.success("💬 Virtual agent engaging...")
+
+# 📡 Telemetry (WebSocket or mock)
+with tabs[2]:
+    st.markdown("### 📡 Live Agent Telemetry")
     telemetry_box = st.empty()
 
     def mock_stream():
@@ -99,10 +93,7 @@ with tabs[1]:
         def on_message(ws, message):
             data = json.loads(message)
             telemetry_box.json(data)
-        ws = websocket.WebSocketApp(
-            "wss://your-backend.example/ws/telemetry",
-            on_message=on_message
-        )
+        ws = websocket.WebSocketApp("wss://your-backend.example/ws/telemetry", on_message=on_message)
         threading.Thread(target=ws.run_forever).start()
 
     if has_ws and st.button("📶 Start WebSocket Feed"):
@@ -110,32 +101,55 @@ with tabs[1]:
     if st.button("▶️ Use Simulated Telemetry"):
         threading.Thread(target=mock_stream).start()
 
-# 🔄 Self-Reflection Logs
-with tabs[2]:
-    st.markdown("### 🧠 Self-Reflection Logs")
+# 🔄 Self-Reflection
+with tabs[3]:
+    st.markdown("### 🔄 Self-Reflection Logs")
     logs = [
-        {"timestamp": "2025-04-15T12:01Z", "change": "Improved route planning", "why": "Reduce time latency"},
-        {"timestamp": "2025-04-14T09:22Z", "change": "Switched power mode", "why": "Battery optimization"}
+        {"timestamp": "2025-04-15T12:01Z", "change": "Reduced redundant scans", "why": "Battery preservation"},
+        {"timestamp": "2025-04-14T09:22Z", "change": "Switched from GPS to vision nav", "why": "Improved accuracy"}
     ]
     for log in logs:
-        st.markdown(
-            f"**🕒 {log['timestamp']}** — *{log['change']}*  \n> _Reason:_ {log['why']}"
-        )
+        st.markdown(f"**🕒 {log['timestamp']}** — *{log['change']}*  
+> _Reason:_ {log['why']}")
 
-# 😊 Emotion Analysis
-with tabs[3]:
+# 🎤 Voice to Cortex
+with tabs[4]:
+    st.markdown("### 🎤 Voice Input")
+    if not has_audio:
+        st.warning("🔇 Voice input not supported in this environment.")
+    else:
+        if st.button("🎧 Start Listening"):
+            recognizer = sr.Recognizer()
+            mic = sr.Microphone()
+            with mic as source:
+                st.info("Listening for 5 seconds...")
+                audio = recognizer.listen(source, timeout=5)
+            try:
+                result = recognizer.recognize_google(audio)
+                st.success(f"🗣 You said: {result}")
+                response = choice([
+                    "Voice acknowledged. Routing signal to cortex.",
+                    "Analyzing acoustic command. Executing…",
+                    "Drone engagement authorized via voice link."
+                ])
+                st.info(f"🤖 Cortex: {response}")
+            except Exception as e:
+                st.error(f"Speech recognition error: {e}")
+
+# 😊 Emotion NLP
+with tabs[5]:
     st.markdown("### 😊 Emotion Analysis")
-    text = st.text_area("Input text for emotional context:")
-    if st.button("🧠 Analyze Emotion"):
+    text = st.text_area("Input text for emotional analysis:")
+    if st.button("🔍 Analyze Emotion"):
         emo = pipeline("text-classification", model="j-hartmann/emotion-english-distilroberta-base")
         st.json(emo(text))
 
 # ⚠️ Drift Detection
-with tabs[4]:
-    st.markdown("### ⚠️ Data Drift Check")
-    if st.button("🔎 Detect Drift"):
+with tabs[6]:
+    st.markdown("### ⚠️ Drift Detection")
+    if st.button("📊 Run Drift Test"):
         ref = np.random.normal(size=500)
-        new = np.concatenate([ref, np.random.normal(loc=1.3, size=100)])
+        new = np.concatenate([ref, np.random.normal(loc=1.2, size=100)])
         stat, p = ks_2samp(ref, new)
         st.metric("Drift?", "Yes" if p < 0.05 else "No")
         st.metric("p-value", round(p, 4))
