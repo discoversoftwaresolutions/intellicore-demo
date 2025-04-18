@@ -2,6 +2,7 @@ import streamlit as st
 import hashlib
 import numpy as np
 import pandas as pd
+import time
 from random import choice
 from transformers import pipeline
 from scipy.stats import ks_2samp
@@ -26,7 +27,7 @@ if 'last_decision' not in st.session_state:
 
 tabs = st.tabs([
     "🌐 Ask IntelliCore", "🛰 Agents", "📡 Telemetry",
-    "🔄 Reflection", "🎤 Voice", "😊 Emotion", "⚠️ Drift", "🧑‍💼 Stakeholder"
+    "🔄 Reflection", "🎤 Voice", "😊 Emotion", "⚠️ Drift", "🧑‍💼 Stakeholders"
 ])
 
 with tabs[0]:
@@ -58,7 +59,22 @@ with tabs[1]:
     st.markdown("💬 **Virtual Agent:** Answering queries")
 
 with tabs[2]:
-    st.markdown("### 📡 Live Agent Telemetry + Map")
+    st.markdown("### 📡 Live Agent Telemetry + Simulated Feed")
+    telemetry_placeholder = st.empty()
+
+    def run_fake_stream():
+        for i in range(10):
+            telemetry_placeholder.json({
+                "agent": "drone",
+                "status": "Scanning",
+                "zone": "Sector A",
+                "tick": i
+            })
+            time.sleep(1)
+
+    if st.button("▶️ Simulate Live Feed"):
+        run_fake_stream()
+
     st.map(pd.DataFrame({
         "lat": [37.76, 37.77, 37.75],
         "lon": [-122.42, -122.41, -122.43]
@@ -71,8 +87,7 @@ with tabs[3]:
         {"timestamp": "2025-04-14T09:22Z", "change": "Switched from GPS to vision nav", "why": "Improved accuracy"}
     ]
     for log in logs:
-        st.markdown(f"**🕒 {log['timestamp']}** — *{log['change']}*  
-> _Reason:_ {log['why']}")
+        st.markdown(f"**🕒 {log['timestamp']}** — *{log['change']}*  \n> _Reason:_ {log['why']}")
 
 with tabs[4]:
     st.markdown("### 🎤 Voice-to-Cortex Interaction (Simulated)")
@@ -98,9 +113,9 @@ with tabs[6]:
 
 with tabs[7]:
     st.markdown("## 🧑‍💼 Stakeholder Overview")
-    st.success("This panel provides an executive summary of IntelliCore AGI's strategic value.")
+    st.success("📣 Executive Summary of IntelliCore AGI")
     st.markdown("""
-**IntelliCore AGI** is a production-ready artificial general intelligence system engineered for autonomous decision-making,
+**IntelliCore AGI** is a production-ready artificial general intelligence system engineered for autonomous decision-making,  
 ethical reasoning, and domain-specific adaptability.
 
 ### 🔍 Key Capabilities
@@ -115,10 +130,6 @@ ethical reasoning, and domain-specific adaptability.
 - Automates executive-level decisions
 - Creates transparent, explainable AGI logic
 - Reduces time-to-decision across entire org charts
-
-### 🧪 Stakeholder Access
-- Password: `Stakeholder2025`
-- Visit: [demo.intellicore.ai](https://demo.intellicore.ai)
 
 ---
 📩 Questions? Reach us at: [founder@discoversoftwaresolution.com](mailto:founder@discoversoftwaresolution.com)
