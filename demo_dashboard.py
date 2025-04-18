@@ -9,6 +9,7 @@ from random import choice
 from transformers import pipeline
 from scipy.stats import ks_2samp
 
+# Voice and audio imports
 try:
     import sounddevice as sd
     import speech_recognition as sr
@@ -16,6 +17,7 @@ try:
 except Exception:
     has_audio = False
 
+# WebSocket support (optional)
 try:
     import websocket
     has_ws = True
@@ -35,15 +37,26 @@ def check_password():
 check_password()
 st.sidebar.success("✅ Access Granted")
 
+# Branding and walkthrough
 st.title("🤖 IntelliCore AGI — Jarvis Demo")
+st.image(
+    "https://intellicore.ai/assets/demo_walkthrough.png",
+    caption="🚀 IntelliCore AGI Walkthrough",
+    use_column_width=True
+)
 st.markdown("Live telemetry, voice input, and Cortex response simulation.")
 
+# Session state
 if 'last_decision' not in st.session_state:
     st.session_state['last_decision'] = None
 
-tabs = st.tabs(["🎤 Voice-to-Cortex", "📡 Live Telemetry", "🔄 Reflection", "😊 Emotion", "⚠️ Drift"])
+# Define tabs
+tabs = st.tabs([
+    "🎤 Voice-to-Cortex", "📡 Live Telemetry",
+    "🔄 Reflection", "😊 Emotion", "⚠️ Drift"
+])
 
-# 🎤 Voice Control
+# 🎤 Voice Input Tab
 with tabs[0]:
     st.markdown("### 🎙️ Talk to IntelliCore")
     if not has_audio:
@@ -67,7 +80,7 @@ with tabs[0]:
             except Exception as e:
                 st.error(f"Speech recognition error: {e}")
 
-# 📡 WebSocket Telemetry
+# 📡 Live Telemetry Tab
 with tabs[1]:
     st.markdown("### 📡 Live Agent Telemetry (WebSocket or Mock)")
     telemetry_box = st.empty()
@@ -86,16 +99,18 @@ with tabs[1]:
         def on_message(ws, message):
             data = json.loads(message)
             telemetry_box.json(data)
-        ws = websocket.WebSocketApp("wss://your-backend.example/ws/telemetry", on_message=on_message)
+        ws = websocket.WebSocketApp(
+            "wss://your-backend.example/ws/telemetry",
+            on_message=on_message
+        )
         threading.Thread(target=ws.run_forever).start()
 
-    if has_ws:
-        if st.button("📶 Start WebSocket Feed"):
-            start_websocket_stream()
+    if has_ws and st.button("📶 Start WebSocket Feed"):
+        start_websocket_stream()
     if st.button("▶️ Use Simulated Telemetry"):
         threading.Thread(target=mock_stream).start()
 
-# 🔄 Reflection Logs
+# 🔄 Self-Reflection Logs
 with tabs[2]:
     st.markdown("### 🧠 Self-Reflection Logs")
     logs = [
@@ -103,10 +118,11 @@ with tabs[2]:
         {"timestamp": "2025-04-14T09:22Z", "change": "Switched power mode", "why": "Battery optimization"}
     ]
     for log in logs:
-        st.markdown(f"**🕒 {log['timestamp']}** — *{log['change']}*  
-> _Reason:_ {log['why']}")
+        st.markdown(
+            f"**🕒 {log['timestamp']}** — *{log['change']}*  \n> _Reason:_ {log['why']}"
+        )
 
-# 😊 Emotion NLP
+# 😊 Emotion Analysis
 with tabs[3]:
     st.markdown("### 😊 Emotion Analysis")
     text = st.text_area("Input text for emotional context:")
